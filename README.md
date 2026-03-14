@@ -38,7 +38,7 @@ L'application génère un graphique comparatif des coûts totaux sur la durée c
 
 Ou alors allez sur la GitHub Pages 
 
-[https://audiard-jerome.github.io/voiture_electrique/](https://the-real-dje33.github.io/voiture_electrique/)
+https://the-real-dje33.github.io/voiture_electrique/
 
 ### Contribuer
 
