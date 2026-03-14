@@ -31,14 +31,14 @@ L'application génère un graphique comparatif des coûts totaux sur la durée c
 
 1. **Cloner le dépôt:**
    ```bash
-   git clone https://github.com/Audiard-Jerome/voiture_electrique.git
+   git clone https://github.com/the-real-dje33/voiture_electrique.git
    ```
 2. **Ouvrir le projet:**
    Ouvrir le fichier `index.html` dans un navigateur web.
 
 Ou alors allez sur la GitHub Pages 
 
-https://audiard-jerome.github.io/voiture_electrique/
+[https://audiard-jerome.github.io/voiture_electrique/](https://the-real-dje33.github.io/voiture_electrique/)
 
 ### Contribuer
 
@@ -53,7 +53,7 @@ Ce projet est sous licence GPL-3.
 
 ### Auteurs
 
-* Audiard Jérôme - Développeur principal
+* the-real-dje33 - Développeur principal
 
 ### Remerciements
 
