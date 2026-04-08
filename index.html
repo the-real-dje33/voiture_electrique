@@ -1,85 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <title>Comparateur de coûts voiture électrique vs thermique</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comparateur Voitures</title>
+  <link rel="stylesheet" href="styles.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
-    <h1>Comparateur de coûts voiture électrique vs thermique</h1>
-    <p>Ce comparateur prend en compte la consommation de la voiture, le prix de l'essence et de l'électricité, le prix d'achat et les aides éventuelles pour vous aider à choisir le véhicule le plus adapté à vos besoins.</p>
 
-    <h2>Voiture thermique</h2>
-    <div class="form-group">
-      <label for="prix_achat_thermique">Prix d'achat (€) :</label>
-      <input type="number" id="prix_achat_thermique">
-    </div>
-    <div class="form-group">
-      <label for="conso_thermique">Consommation (L/100km) :</label>
-      <input type="number" id="conso_thermique" step="0.1">
-    </div>
-    <div class="form-group">
-      <label for="assurance_thermique">Assurance annuelle (€) :</label>
-      <input type="number" id="assurance_thermique" step="0.01">
-    </div>
-    <div class="form-group">
-      <label for="revision_thermique">Révision annuelle (€) :</label>
-      <input type="number" id="revision_thermique" step="0.01">
-    </div>
+<h1>Comparateur Électrique vs Thermique</h1>
 
-    <h2>Voiture électrique</h2>
-    <div class="form-group">
-      <label for="prix_achat_electrique">Prix d'achat (€) :</label>
-      <input type="number" id="prix_achat_electrique">
-    </div>
-    <div class="form-group">
-      <label for="conso_electrique">Consommation (kWh/100km) :</label>
-      <input type="number" id="conso_electrique" step="0.1">
-    </div>
-    <div class="form-group">
-      <label for="assurance_electrique">Assurance annuelle (€) :</label>
-      <input type="number" id="assurance_electrique" step="0.01">
-    </div>
-    <div class="form-group">
-      <label for="revision_electrique">Révision annuelle (€) :</label>
-      <input type="number" id="revision_electrique" step="0.01">
-    </div>
-
-    <h2>Coûts et aides</h2>
-    <div class="form-group">
-      <label for="prix_essence">Prix de l'essence (€/L) :</label>
-      <input type="number" id="prix_essence" step="0.01">
-    </div>
-    <div class="form-group">
-      <label for="prix_electricite">Prix de l'électricité (€/kWh) :</label>
-      <input type="number" id="prix_electricite" step="0.01">
-    </div>
-    <div class="form-group">
-      <label for="aide_achat_thermique">Aide à l'achat thermique (€) :</label>
-      <input type="number" id="aide_achat_thermique">
-    </div>
-    <div class="form-group">
-      <label for="aide_achat_electrique">Aide à l'achat électrique (€) :</label>
-      <input type="number" id="aide_achat_electrique">
-    </div>
-    <div class="form-group">
-      <label for="duree">Durée de possession (années) :</label>
-      <input type="number" id="duree">
-    </div>
-    <div class="form-group">
-      <label for="distance">Distance annuelle (km) :</label>
-      <input type="number" id="distance">
-    </div>
-
-    <button onclick="calculer()">Calculer</button>
-    <button onclick="reset()">Reset</button>
-
-    <div id="resultat"></div>
-
-    <canvas id="myChart"></canvas>
+<div class="container">
+  <div class="card">
+    <h2>⚡ Électrique</h2>
+    <input id="prix_elec" placeholder="Prix d'achat (€)">
+    <input id="conso_elec" placeholder="Conso (kWh/100km)">
+    <input id="energie_elec" placeholder="Prix électricité (€/kWh)">
+    <input id="revision_elec" placeholder="Révision annuelle (€)">
+    <input id="assurance_elec" placeholder="Assurance annuelle (€)">
+    <input id="aide_elec" placeholder="Aides (€)">
   </div>
 
-  <script src="script.js"></script>
+  <div class="card">
+    <h2>⛽ Thermique</h2>
+    <input id="prix_therm" placeholder="Prix d'achat (€)">
+    <input id="conso_therm" placeholder="Conso (L/100km)">
+    <input id="energie_therm" placeholder="Prix carburant (€/L)">
+    <input id="revision_therm" placeholder="Révision annuelle (€)">
+    <input id="assurance_therm" placeholder="Assurance annuelle (€)">
+    <input id="aide_therm" placeholder="Aides (€)">
+  </div>
+</div>
+
+<div class="controls">
+  <input id="km" placeholder="Kilomètres/an">
+  <input id="duree" placeholder="Durée (années)">
+  <button id="btnCalcul">Calculer</button>
+</div>
+
+<canvas id="chart"></canvas>
+
+<script src="app.js"></script>
 </body>
 </html>
+
+
