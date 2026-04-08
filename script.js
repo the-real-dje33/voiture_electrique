@@ -1,6 +1,12 @@
-// Récupération des valeurs
 function getValue(id) {
-  return parseFloat(document.getElementById(id).value) || 0;
+  return parseFloat(document.getElementById(id).value);
+}
+
+function validateInputs(ids) {
+  for (let id of ids) {
+    if (isNaN(getValue(id))) return false;
+  }
+  return true;
 }
 
 function getVehicleData(prefix) {
@@ -13,47 +19,67 @@ function getVehicleData(prefix) {
   };
 }
 
-// Calcul du coût annuel
-function calculCoutAnnuel(km, vehicule) {
-  return (km / 100) * vehicule.conso * vehicule.energie
-    + vehicule.revision
-    + vehicule.assurance;
+function calculCoutAnnuel(km, v) {
+  return (km/100)*v.conso*v.energie + v.revision + v.assurance;
 }
-
-// Calcul total sur durée
-function calculCouts(duree, km, vehicule) {
-  let total = vehicule.prix;
-  const resultats = [];
-
-  for (let i = 1; i <= duree; i++) {
-    total += calculCoutAnnuel(km, vehicule);
-    resultats.push(total);
+function calculCouts(duree, km, v) {
+  let total = v.prix;
+  let result = [];
+  for(let i=1;i<=duree;i++){
+    total += calculCoutAnnuel(km,v);
+    result.push(total);
   }
-
-  return resultats;
+  return result;
 }
 
-// Graphique
+function findBreakEven(elec, therm) {
+  for(let i=0;i<elec.length;i++){
+    if(elec[i] < therm[i]) return i+1;
+  }
+  return null;
+}
+
 let chart;
 function afficherGraphique(duree, elecData, thermData) {
-  const ctx = document.getElementById('chart').getContext('2d');
-
-  if (chart) chart.destroy();
+  const ctx = document.getElementById('chart');
+  if(chart) chart.destroy();
 
   chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: Array.from({ length: duree }, (_, i) => i + 1),
-      datasets: [
-        { label: 'Électrique (€)', data: elecData },
-        { label: 'Thermique (€)', data: thermData }
+    type:'line',
+    data:{
+      labels: Array.from({length:duree},(_,i)=>i+1),
+      datasets:[
+        {label:'Électrique (€)', data:elecData, tension:0.3},
+        {label:'Thermique (€)', data:thermData, tension:0.3}
       ]
+    },
+    options:{
+      animation:{ duration:1200 }
     }
   });
 }
+function afficherResultats(elec, therm, breakEven) {
+  document.getElementById('result_elec').textContent = `Total électrique : ${Math.round(elec.at(-1))} €`;
+  document.getElementById('result_therm').textContent = `Total thermique : ${Math.round(therm.at(-1))} €`;
 
-// Fonction principale
-function calculer() {
+  document.getElementById('rentabilite').textContent = breakEven
+    ? `Rentable à partir de l'année ${breakEven}`
+    : "Pas de rentabilité sur la période";
+}
+
+function calculer(){
+  const ids = [
+    'km','duree',
+    'prix_elec','conso_elec','energie_elec','revision_elec','assurance_elec','aide_elec',
+    'prix_therm','conso_therm','energie_therm','revision_therm','assurance_therm','aide_therm'
+  ];
+
+  if(!validateInputs(ids)){
+    document.getElementById('error').textContent = "Merci de remplir tous les champs correctement";
+    return;
+  }
+  document.getElementById('error').textContent = "";
+
   const km = getValue('km');
   const duree = getValue('duree');
 
@@ -63,9 +89,10 @@ function calculer() {
   const coutElec = calculCouts(duree, km, elec);
   const coutTherm = calculCouts(duree, km, therm);
 
-  afficherGraphique(duree, coutElec, coutTherm);
-}
+  const breakEven = findBreakEven(coutElec, coutTherm);
 
-// Event
+  afficherGraphique(duree, coutElec, coutTherm);
+  afficherResultats(coutElec, coutTherm, breakEven);
+}
 
 document.getElementById('btnCalcul').addEventListener('click', calculer);
