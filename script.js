@@ -1,15 +1,38 @@
-function getValue(id) {
+const fields = [
+  'km','duree',
+  'prix_elec','conso_elec','energie_elec','revision_elec','assurance_elec','aide_elec',
+  'prix_therm','conso_therm','energie_therm','revision_therm','assurance_therm','aide_therm'
+];
+
+function getValue(id){
   return parseFloat(document.getElementById(id).value);
 }
 
-function validateInputs(ids) {
-  for (let id of ids) {
-    if (isNaN(getValue(id))) return false;
-  }
-  return true;
+function saveData(){
+  const data = {};
+  fields.forEach(id => data[id] = document.getElementById(id).value);
+  localStorage.setItem('carComparator', JSON.stringify(data));
 }
 
-function getVehicleData(prefix) {
+function loadData(){
+  const data = JSON.parse(localStorage.getItem('carComparator'));
+  if(!data) return;
+  fields.forEach(id => {
+    if(data[id]) document.getElementById(id).value = data[id];
+  });
+}
+
+function resetData(){
+  localStorage.removeItem('carComparator');
+  fields.forEach(id => document.getElementById(id).value = '');
+  location.reload();
+}
+
+function validateInputs(){
+  return fields.every(id => !isNaN(getValue(id)));
+}
+
+function getVehicle(prefix){
   return {
     prix: getValue(`prix_${prefix}`) - getValue(`aide_${prefix}`),
     conso: getValue(`conso_${prefix}`),
@@ -19,80 +42,75 @@ function getVehicleData(prefix) {
   };
 }
 
-function calculCoutAnnuel(km, v) {
+function annualCost(km,v){
   return (km/100)*v.conso*v.energie + v.revision + v.assurance;
 }
-function calculCouts(duree, km, v) {
-  let total = v.prix;
-  let result = [];
+
+function compute(duree,km,v){
+  let total=v.prix;
+  let arr=[];
   for(let i=1;i<=duree;i++){
-    total += calculCoutAnnuel(km,v);
-    result.push(total);
+    total+=annualCost(km,v);
+    arr.push(total);
   }
-  return result;
+  return arr;
 }
 
-function findBreakEven(elec, therm) {
-  for(let i=0;i<elec.length;i++){
-    if(elec[i] < therm[i]) return i+1;
+function breakEven(e,t){
+  for(let i=0;i<e.length;i++){
+    if(e[i]<t[i]) return i+1;
   }
   return null;
 }
 
 let chart;
-function afficherGraphique(duree, elecData, thermData) {
-  const ctx = document.getElementById('chart');
+function draw(duree,e,t){
+  const ctx=document.getElementById('chart');
   if(chart) chart.destroy();
 
-  chart = new Chart(ctx, {
+  chart=new Chart(ctx,{
     type:'line',
     data:{
-      labels: Array.from({length:duree},(_,i)=>i+1),
+      labels:Array.from({length:duree},(_,i)=>`Année ${i+1}`),
       datasets:[
-        {label:'Électrique (€)', data:elecData, tension:0.3},
-        {label:'Thermique (€)', data:thermData, tension:0.3}
+        {label:'Électrique',data:e,tension:0.4},
+        {label:'Thermique',data:t,tension:0.4}
       ]
     },
-    options:{
-      animation:{ duration:1200 }
-    }
+    options:{animation:{duration:1200}}
   });
 }
-function afficherResultats(elec, therm, breakEven) {
-  document.getElementById('result_elec').textContent = `Total électrique : ${Math.round(elec.at(-1))} €`;
-  document.getElementById('result_therm').textContent = `Total thermique : ${Math.round(therm.at(-1))} €`;
 
-  document.getElementById('rentabilite').textContent = breakEven
-    ? `Rentable à partir de l'année ${breakEven}`
-    : "Pas de rentabilité sur la période";
+function showResults(e,t,be){
+  result_elec.textContent=`Total électrique : ${Math.round(e.at(-1))} €`;
+  result_therm.textContent=`Total thermique : ${Math.round(t.at(-1))} €`;
+  rentabilite.textContent=be?`Rentable année ${be}`:"Non rentable";
 }
 
 function calculer(){
-  const ids = [
-    'km','duree',
-    'prix_elec','conso_elec','energie_elec','revision_elec','assurance_elec','aide_elec',
-    'prix_therm','conso_therm','energie_therm','revision_therm','assurance_therm','aide_therm'
-  ];
-
-  if(!validateInputs(ids)){
-    document.getElementById('error').textContent = "Merci de remplir tous les champs correctement";
+  if(!validateInputs()){
+    error.textContent="Remplis correctement tous les champs";
     return;
   }
-  document.getElementById('error').textContent = "";
 
-  const km = getValue('km');
-  const duree = getValue('duree');
+  error.textContent="";
 
-  const elec = getVehicleData('elec');
-  const therm = getVehicleData('therm');
+  const km=getValue('km');
+  const duree=getValue('duree');
 
-  const coutElec = calculCouts(duree, km, elec);
-  const coutTherm = calculCouts(duree, km, therm);
+  const e=getVehicle('elec');
+  const t=getVehicle('therm');
 
-  const breakEven = findBreakEven(coutElec, coutTherm);
+  const ce=compute(duree,km,e);
+  const ct=compute(duree,km,t);
 
-  afficherGraphique(duree, coutElec, coutTherm);
-  afficherResultats(coutElec, coutTherm, breakEven);
+  draw(duree,ce,ct);
+  showResults(ce,ct,breakEven(ce,ct));
+
+  saveData();
 }
 
-document.getElementById('btnCalcul').addEventListener('click', calculer);
+btnCalcul.addEventListener('click',calculer);
+btnReset.addEventListener('click',resetData);
+
+loadData();
