@@ -10,44 +10,51 @@
 </head>
 <body>
 
-<h1>Comparateur Électrique vs Thermique</h1>
+<div class="app">
+  <h1>🚗 Comparateur de coût</h1>
+  <p class="subtitle">Électrique vs Thermique sur plusieurs années</p>
 
-<div class="container">
-  <div class="card">
-    <h2>⚡ Électrique</h2>
-    <input id="prix_elec" placeholder="Prix d'achat (€)">
-    <input id="conso_elec" placeholder="Conso (kWh/100km)">
-    <input id="energie_elec" placeholder="Prix électricité (€/kWh)">
-    <input id="revision_elec" placeholder="Révision annuelle (€)">
-    <input id="assurance_elec" placeholder="Assurance annuelle (€)">
-    <input id="aide_elec" placeholder="Aides (€)">
+  <div class="container">
+    <div class="card">
+      <h2>⚡ Électrique</h2>
+      <input id="prix_elec" placeholder="Prix (€)">
+      <input id="conso_elec" placeholder="kWh / 100km">
+      <input id="energie_elec" placeholder="€/kWh">
+      <input id="revision_elec" placeholder="Révision / an">
+      <input id="assurance_elec" placeholder="Assurance / an">
+      <input id="aide_elec" placeholder="Aides (€)">
+    </div>
+
+    <div class="card">
+      <h2>⛽ Thermique</h2>
+      <input id="prix_therm" placeholder="Prix (€)">
+      <input id="conso_therm" placeholder="L / 100km">
+      <input id="energie_therm" placeholder="€/L">
+      <input id="revision_therm" placeholder="Révision / an">
+      <input id="assurance_therm" placeholder="Assurance / an">
+      <input id="aide_therm" placeholder="Aides (€)">
+    </div>
   </div>
 
-  <div class="card">
-    <h2>⛽ Thermique</h2>
-    <input id="prix_therm" placeholder="Prix d'achat (€)">
-    <input id="conso_therm" placeholder="Conso (L/100km)">
-    <input id="energie_therm" placeholder="Prix carburant (€/L)">
-    <input id="revision_therm" placeholder="Révision annuelle (€)">
-    <input id="assurance_therm" placeholder="Assurance annuelle (€)">
-    <input id="aide_therm" placeholder="Aides (€)">
+  <div class="controls">
+    <input id="km" placeholder="Km / an">
+    <input id="duree" placeholder="Durée (années)">
+
+    <div class="buttons">
+      <button id="btnCalcul">Calculer</button>
+      <button id="btnReset" class="secondary">Reset</button>
+    </div>
   </div>
-</div>
 
-<div class="controls">
-  <input id="km" placeholder="Kilomètres/an">
-  <input id="duree" placeholder="Durée (années)">
-  <button id="btnCalcul">Calculer</button>
-</div>
+  <div class="results">
+    <p id="result_elec"></p>
+    <p id="result_therm"></p>
+    <p id="rentabilite"></p>
+    <p id="error" class="error"></p>
+  </div>
 
-<div class="results">
-  <p id="result_elec"></p>
-  <p id="result_therm"></p>
-  <p id="rentabilite"></p>
-  <p id="error" class="error"></p>
+  <canvas id="chart"></canvas>
 </div>
-
-<canvas id="chart"></canvas>
 
 <script src="script.js"></script>
 </body>
